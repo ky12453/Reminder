@@ -2,20 +2,24 @@
 // https://nightwatchjs.org/guide
 
 module.exports = {
-  'default e2e tests': browser => {
-    browser
-      .init()
-      .waitForElementVisible('#app')
-      .assert.elementPresent('.hello')
-      .assert.containsText('h1', 'Welcome to Your Vue.js App')
-      .assert.elementCount('img', 1)
-      .end()
+  'check login function': browser => {
+    const lp = browser.page.loginPage();
+    const rp = browser.page.reminderPage();
+
+    lp.navigate();
+    lp.setValue('@textField', 'kosei');
+    lp.setValue('@passwordField', 'Wtct3b77');
+    lp.click('@loginButton');
+    rp.waitForElementVisible('@appContainer', 1000);
+    rp.assert.urlEquals('http://localhost:8081/');
   },
 
-  'example e2e test using a custom command': browser => {
-    browser
-      .openHomepage()
-      .assert.elementPresent('.hello')
-      .end()
+  'check logout function': browser => {
+    const lp = browser.page.loginPage();
+    const rp = browser.page.reminderPage();
+
+    rp.click('@logoutButton');
+    lp.waitForElementVisible('@appContainer', 1000);
+    lp.assert.urlEquals('http://localhost:8081/login');
   }
 }
